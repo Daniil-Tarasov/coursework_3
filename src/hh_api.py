@@ -12,7 +12,7 @@ class HHApi(BaseApi):
 
         self.__url = "https://api.hh.ru/vacancies"
         self.__headers = {"User-Agent": "HH-User-Agent"}
-        self.__params = {"page": 0, "per_page": 100}
+        self.__params = {"page": 0, "per_page": 10}
         self.__vacancies = []
         self.__employers = []
 
@@ -34,7 +34,7 @@ class HHApi(BaseApi):
         if self._get_response():
             self.__params["text"] = keyword
             self.__params["sort_by"] = "by_vacancies_open"
-            while self.__params.get("page") != 10:
+            while self.__params.get("page") != 1:
                 response = requests.get("https://api.hh.ru/employers", headers=self.__headers, params=self.__params)
                 employers = response.json()["items"]
                 self.__params["page"] += 1
@@ -44,7 +44,8 @@ class HHApi(BaseApi):
                         {
                             "employers_id": emp['id'],
                             "employer_name": emp['name'],
-                            "employer_url": emp.get("url")
+                            "employer_url": emp.get("url"),
+                            'open_vacancies': emp['open_vacancies']
                         }
                     )
         return self.__employers
@@ -63,9 +64,9 @@ class HHApi(BaseApi):
         return self.__vacancies
 
 
-if __name__ == "__main__":
-    hh = HHApi()
-    print(hh.load_employers("Яндекс"))
+# if __name__ == "__main__":
+#     hh = HHApi()
+#     print(hh.load_employers("Яндекс"))
     # print(hh.load_vacancies_by_id("1740"))
 # 1740 - Яндекс
 # 78638 - Т-банк
