@@ -30,10 +30,10 @@ def create_bd(db_name: str, params: dict) -> None:
         cur.exucate(
             """
             CREATE TABLE IF NOT EXISTS vacancies (
-            vacancy_id VARCHAR(20) PRIMARY KEY,
             employer_id VARCHAR(20) NOT NULL,
+            vacancy_id VARCHAR(20) PRIMARY KEY,
             vacancy_name VARCHAR(100) NOT NULL,
-            salary INT,
+            salary TEXT,
             responsibility TEXT,
             requirements TEXT,
             vacancy_url TEXT,
@@ -43,10 +43,53 @@ def create_bd(db_name: str, params: dict) -> None:
             """
         )
 
+    conn.commit()
     conn.close()
 
 
 def record_data_in_db(employer_data: list, vacancy_data: list, db_name: str, params: dict) -> None:
     """Записывает данные в БД PostgreSQL"""
 
-    pass
+    conn = None
+    try:
+        conn = psycopg2.connect(dbname=db_name, **params)
+        conn.autocommit = True
+        with conn.cursor() as cur:
+            for employer in employer_data:
+                cur.execute(
+                    """
+                    INSERT INTO employers_list (employer_id, employer_name, company_url, open_vacancies)
+                    VALUES (%s, %s, %s, %s)
+                    RETURNING employer_id
+                    """,
+                    (
+                        employer["employer_id"],
+                        employer["employer_name"],
+                        employer["employer_url"],
+                        employer["open_vacancies"]
+                    ),
+                )
+                employer_id = cur.fetchone()[0]
+                for vacancy in vacancy_data:
+                    cur.execute(
+                        """
+                        INSERT INTO vacancies (employer_id, vacancy_id, vacancy_name, salary, responsibility, requirements, vacancy_url)
+                        VALUES (%s, %s, %s, %s, %s, %s, %s)
+                        """,
+                        (
+                            employer_id,
+                            vacancy["id"],
+                            vacancy["name"],
+                            vacancy["salary"],
+                            vacancy["responsibility"],
+                            vacancy["requirements"],
+                            vacancy["url"]
+                        ),
+                    )
+            print("Таблицы заполнены")
+    except Exception as ex:
+        print(f'Ошибка записи данных в БД: {ex}')
+    finally:
+        if conn:
+            conn.commit()
+            conn.close()

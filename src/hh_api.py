@@ -42,7 +42,7 @@ class HHApi(BaseApi):
                     print(f'ID - {employer['id']}. Название - {employer['name']}. Открытых вакансий - {employer['open_vacancies']}')
                     employers.append(
                         {
-                            "employers_id": employer['id'],
+                            "employer_id": employer['id'],
                             "employer_name": employer['name'],
                             "employer_url": employer.get("url"),
                             'open_vacancies': employer['open_vacancies']

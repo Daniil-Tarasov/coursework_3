@@ -5,6 +5,7 @@ class Vacancies:
 
     def __init__(
         self,
+        vacancy_id: int | str,
         name: str,
         url: str,
         salary: dict | str = "Зарплата не указана",
@@ -13,12 +14,14 @@ class Vacancies:
     ):
         """Конструктор класса"""
 
+        self.__vacancy_id = vacancy_id
         self.__name = name
         self.__url = url
         self.__salary = self.__validate_salary(salary)
         self.__responsibility = responsibility
         self.__requirements = requirements
         dict_vacancy = {
+            "ID": self.__vacancy_id,
             "name": self.__name,
             "url": self.__url,
             "salary": self.__salary,
@@ -32,12 +35,14 @@ class Vacancies:
         """Получение вакансий из списка"""
 
         for vacancy in vacancies_list:
+            vacancy_id = vacancy.get('id')
             url = vacancy.get("url") if vacancy.get("url") else vacancy.get("alternate_url")
-            salary = cls.__validate_salary(vacancy.get("salary"))
+            salary = vacancy.get("salary")
             responsibility = vacancy["snippet"].get("responsibility", "Обязанности не указаны")
             requirements = vacancy["snippet"].get("requirements", "Требования не указаны")
 
             cls(
+                vacancy_id=vacancy_id,
                 name=vacancy.get("name", "Не указано"),
                 url=url,
                 salary=salary,
@@ -47,17 +52,18 @@ class Vacancies:
         return cls.__list_vacancies
 
     @staticmethod
-    def __validate_salary(salary: dict) -> dict:
+    def __validate_salary(salary: dict) -> str:
         """Метод валидации зарплаты"""
 
         if salary is None or salary == "Зарплата не указана":
-            return {"from": 0, "to": 0}
+            return "Зарплата не указана"
         else:
-            return {
-                "from": salary.get("from", "не указано"),
-                "to": salary.get("to", "не указано"),
-                "currency": salary.get("currency", "не указана"),
-            }
+            return f"От {salary.get("from", "не указано")} до {salary.get("to", "не указано")} валюта {salary.get("currency", "не указана")}"
+            #     {
+            #     "from": salary.get("from", "не указано"),
+            #     "to": salary.get("to", "не указано"),
+            #     "currency": salary.get("currency", "не указана"),
+            # }
 
     def __str__(self) -> str:
         return (
@@ -102,6 +108,7 @@ if __name__ == "__main__":
     vac2 = Vacancies.get_vacancies_from_list(
         [
             {
+                "id": 12354,
                 "name": "ert0",
                 "url": "trhght",
                 "salary": {"from": 1, "to": 5},
