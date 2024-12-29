@@ -8,7 +8,7 @@ class Vacancies:
         vacancy_id: int | str,
         name: str,
         url: str,
-        salary: dict | str = "Зарплата не указана",
+        salary: dict,
         responsibility: str = "Описание не указано",
         requirements: str = "Требования не указаны",
     ):
@@ -52,18 +52,14 @@ class Vacancies:
         return cls.__list_vacancies
 
     @staticmethod
-    def __validate_salary(salary: dict) -> str:
+    def __validate_salary(salary: dict) -> None | int:
         """Метод валидации зарплаты"""
 
         if salary is None or salary == "Зарплата не указана":
-            return "Зарплата не указана"
+            return None
         else:
-            return f"От {salary.get("from", "не указано")} до {salary.get("to", "не указано")} валюта {salary.get("currency", "не указана")}"
-            #     {
-            #     "from": salary.get("from", "не указано"),
-            #     "to": salary.get("to", "не указано"),
-            #     "currency": salary.get("currency", "не указана"),
-            # }
+            salary = (salary.get("from", 0) + salary.get("to", 0)) // 2
+            return salary
 
     def __str__(self) -> str:
         return (
@@ -102,18 +98,18 @@ class Vacancies:
         return self.__requirements
 
 
-if __name__ == "__main__":
+# if __name__ == "__main__":
 #     vac1 = Vacancies("Тестировщик", "https://api.hh.ru/areas/26", {"from": 0, "to": 0, "currency": "RUB"}, "Какое-то описание", "Какие-то требования")
 #     print(vac1)
-    vac2 = Vacancies.get_vacancies_from_list(
-        [
-            {
-                "id": 12354,
-                "name": "ert0",
-                "url": "trhght",
-                "salary": {"from": 1, "to": 5},
-                "snippet": {"responsibility": "tes", "requirements": "kjh"}
-            }
-        ]
-    )
-    print(vac2)
+#     vac2 = Vacancies.get_vacancies_from_list(
+#         [
+#             {
+#                 "id": 12354,
+#                 "name": "ert0",
+#                 "url": "trhght",
+#                 "salary": {"from": 1, "to": 5},
+#                 "snippet": {"responsibility": "tes", "requirements": "kjh"}
+#             }
+#         ]
+#     )
+#     print(vac2)

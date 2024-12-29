@@ -33,7 +33,7 @@ def create_bd(db_name: str, params: dict) -> None:
             employer_id VARCHAR(20) NOT NULL,
             vacancy_id VARCHAR(20) PRIMARY KEY,
             vacancy_name VARCHAR(100) NOT NULL,
-            salary TEXT,
+            salary INT,
             responsibility TEXT,
             requirements TEXT,
             vacancy_url TEXT,
@@ -87,9 +87,9 @@ def record_data_in_db(employer_data: list, vacancy_data: list, db_name: str, par
                         ),
                     )
             print("Таблицы заполнены")
+        conn.commit()
     except Exception as ex:
         print(f'Ошибка записи данных в БД: {ex}')
     finally:
         if conn:
-            conn.commit()
             conn.close()
