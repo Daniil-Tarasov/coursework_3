@@ -6,6 +6,7 @@ from src.base_api import BaseApi
 class HHApi(BaseApi):
     """Класс для работы с API HeadHunter"""
 
+    __slots__ = ("__url", "__headers", "__params")
 
     def __init__(self):
         """Конструктор класса"""
@@ -13,8 +14,6 @@ class HHApi(BaseApi):
         self.__url = "https://api.hh.ru/vacancies"
         self.__headers = {"User-Agent": "HH-User-Agent"}
         self.__params = {"page": 0, "per_page": 10}
-        self.__vacancies = []
-        self.__employers = []
 
     def _get_response(self) -> bool:
         """Метод подключения к API"""
@@ -31,43 +30,45 @@ class HHApi(BaseApi):
     def load_employers(self, keyword: str):
         """Метод получения данных компаний из API сервиса"""
 
+        employers = []
         if self._get_response():
             self.__params["text"] = keyword
             self.__params["sort_by"] = "by_vacancies_open"
             while self.__params.get("page") != 1:
                 response = requests.get("https://api.hh.ru/employers", headers=self.__headers, params=self.__params)
-                employers = response.json()["items"]
+                data = response.json()["items"]
                 self.__params["page"] += 1
-                for emp in employers:
-                    print(f'ID - {emp['id']}. Название - {emp['name']}. Открытых вакансий - {emp['open_vacancies']}')
-                    self.__employers.append(
+                for employer in data:
+                    print(f'ID - {employer['id']}. Название - {employer['name']}. Открытых вакансий - {employer['open_vacancies']}')
+                    employers.append(
                         {
-                            "employers_id": emp['id'],
-                            "employer_name": emp['name'],
-                            "employer_url": emp.get("url"),
-                            'open_vacancies': emp['open_vacancies']
+                            "employers_id": employer['id'],
+                            "employer_name": employer['name'],
+                            "employer_url": employer.get("url"),
+                            'open_vacancies': employer['open_vacancies']
                         }
                     )
-        return self.__employers
+        return employers
 
     def load_vacancies_by_id(self, id_employer: str):
         """Метод загрузки данных вакансий по ID компании из API сервиса"""
 
+        vacancies = []
         if self._get_response():
             self.__params["employer_id"] = id_employer
             while self.__params.get("page") != 10:
                 response = requests.get(self.__url, headers=self.__headers, params=self.__params)
-                vacancies = response.json()["items"]
-                self.__vacancies.extend(vacancies)
+                data = response.json()["items"]
+                vacancies.extend(data)
                 self.__params["page"] += 1
 
-        return self.__vacancies
+        return vacancies
 
 
-# if __name__ == "__main__":
-#     hh = HHApi()
-#     print(hh.load_employers("Яндекс"))
-    # print(hh.load_vacancies_by_id("1740"))
+if __name__ == "__main__":
+    hh = HHApi()
+    print(hh.load_employers("Яндекс"))
+    print(hh.load_vacancies_by_id("1740"))
 # 1740 - Яндекс
 # 78638 - Т-банк
 # 40565 - Google
