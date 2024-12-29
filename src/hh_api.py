@@ -56,7 +56,7 @@ class HHApi(BaseApi):
         vacancies = []
         if self._get_response():
             self.__params["employer_id"] = id_employer
-            while self.__params.get("page") != 10:
+            while self.__params.get("page") != 5:
                 response = requests.get(self.__url, headers=self.__headers, params=self.__params)
                 data = response.json()["items"]
                 vacancies.extend(data)
