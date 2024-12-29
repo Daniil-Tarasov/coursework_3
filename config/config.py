@@ -3,7 +3,7 @@ from configparser import ConfigParser
 
 def config(
     filename="/Users/danya/my_prj/coursework_3/config/database.ini",
-    section="postgres",
+    section="postgresql",
 ):
     # create a parser
     parser = ConfigParser(interpolation=None)
