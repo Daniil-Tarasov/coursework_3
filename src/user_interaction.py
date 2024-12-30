@@ -5,7 +5,6 @@ from src.hh_api import HHApi
 from src.utils import get_data_employer_by_id
 from src.vacancies import Vacancies
 
-
 vacancies = []
 
 
@@ -26,17 +25,17 @@ def user_interaction():
         query = input("Введите название компании по которой желаете получить данные или скопируйте из списка сверху: ")
         if query:
             hh = HHApi()
-            employers = hh.load_employers(query) # поиск работодателей в hh по запросу пользователя
+            employers = hh.load_employers(query)  # поиск работодателей в hh по запросу пользователя
             hh = HHApi()
             user_id = input("Вставьте ID компании, для поиска вакансий ")
-            user_employer = get_data_employer_by_id(employers, user_id) # получаем нужную компанию
+            user_employer = get_data_employer_by_id(employers, user_id)  # получаем нужную компанию
             user_employers.extend(user_employer)
-            vacancies_list = hh.load_vacancies_by_id(user_id) # получаем список вакансий по ID компании
-            vacancies = Vacancies.get_vacancies_from_list(vacancies_list) # записываем вакансии в класс Vacancies
+            vacancies_list = hh.load_vacancies_by_id(user_id)  # получаем список вакансий по ID компании
+            vacancies = Vacancies.get_vacancies_from_list(vacancies_list)  # записываем вакансии в класс Vacancies
         else:
             print("Не оставляйте поле пустым")
         answer = input("Желаете выполнить поиск ещё раз? y/n ")
-        while answer.lower() not in ['y', 'n']:
+        while answer.lower() not in ["y", "n"]:
             answer = input("Введите либо 'y' либо 'n' ")
 
     db_name_user = input("Задайте имя для базы данных или оставьте по умолчанию(employers) ")
@@ -46,8 +45,8 @@ def user_interaction():
     else:
         db_name = default_name
 
-    create_bd(db_name, params) # создаём базу данных
-    record_data_in_db(user_employers, vacancies, db_name, params) # запись данных в таблицы
+    create_bd(db_name, params)  # создаём базу данных
+    record_data_in_db(user_employers, vacancies, db_name, params)  # запись данных в таблицы
 
     while True:
         options = input(

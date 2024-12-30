@@ -38,8 +38,8 @@ class Vacancies:
         """Получение вакансий из списка"""
 
         for vacancy in vacancies_list:
-            employer_id = vacancy['employer']['id']
-            vacancy_id = vacancy.get('id')
+            employer_id = vacancy["employer"]["id"]
+            vacancy_id = vacancy.get("id")
             url = vacancy.get("alternate_url", "Не указана")
             salary = vacancy.get("salary")
             responsibility = vacancy["snippet"].get("responsibility", "Обязанности не указаны")
@@ -64,7 +64,7 @@ class Vacancies:
             return None
         elif salary.get("from") is None:
             return salary.get("to")
-        elif salary .get("to") is None:
+        elif salary.get("to") is None:
             return salary.get("from")
         else:
             salary = (salary.get("from", 0) + salary.get("to", 0)) // 2

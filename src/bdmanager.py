@@ -27,7 +27,7 @@ class DBManager:
 
         rows = cur.fetchall()
         for row in rows:
-            print(f'Название вакансии: {row[0]}\nКоличество вакансий: {row[1]}\n')
+            print(f"Название вакансии: {row[0]}\nКоличество вакансий: {row[1]}\n")
 
         cur.close()
         conn.close()
@@ -40,20 +40,18 @@ class DBManager:
 
         cur.execute(
             """
-            SELECT employer_name, 
-            vacancy_name, 
-            salary, 
+            SELECT employer_name,
+            vacancy_name,
+            salary,
             vacancy_url
-            FROM vacancies 
-            JOIN employers_list USING (employer_id); 
+            FROM vacancies
+            JOIN employers_list USING (employer_id);
             """
         )
 
         rows = cur.fetchall()
         for row in rows:
-            print(
-                f'Компания: {row[0]}. Вакансия: {row[1]}. Зарплата: {row[2]}. Ссылка на вакансию: {row[3]}'
-            )
+            print(f"Компания: {row[0]}. Вакансия: {row[1]}. Зарплата: {row[2]}. Ссылка на вакансию: {row[3]}")
 
         cur.close()
         conn.close()
@@ -73,7 +71,7 @@ class DBManager:
         )
 
         rows = cur.fetchone()
-        print(f'Средняя зарплата для всех вакансий - {round(rows[0], 2)}')
+        print(f"Средняя зарплата для всех вакансий - {round(rows[0], 2)}")
 
         cur.close()
         conn.close()
@@ -93,9 +91,7 @@ class DBManager:
 
         rows = cur.fetchall()
         for row in rows:
-            print(
-                f'Вакансия: {row[2]}. Зарплата: {row[3]}. Ссылка - {row[6]}'
-            )
+            print(f"Вакансия: {row[2]}. Зарплата: {row[3]}. Ссылка - {row[6]}")
 
         cur.close()
         conn.close()
@@ -116,9 +112,7 @@ class DBManager:
 
         rows = cur.fetchall()
         for row in rows:
-            print(
-                f'Вакансия: {row[2]}. Зарплата: {row[3]}. Ссылка - {row[6]}'
-            )
+            print(f"Вакансия: {row[2]}. Зарплата: {row[3]}. Ссылка - {row[6]}")
 
         cur.close()
         conn.close()

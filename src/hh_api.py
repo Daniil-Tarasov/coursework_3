@@ -18,9 +18,7 @@ class HHApi(BaseApi):
     def _get_response(self) -> bool:
         """Метод подключения к API"""
 
-        response = requests.get(
-            self.__url, headers=self.__headers, params=self.__params
-        )
+        response = requests.get(self.__url, headers=self.__headers, params=self.__params)
         status_code = response.status_code
         if status_code == 200:
             return True
@@ -39,13 +37,15 @@ class HHApi(BaseApi):
                 data = response.json()["items"]
                 self.__params["page"] += 1
                 for employer in data:
-                    print(f'ID - {employer['id']}. Название - {employer['name']}. Открытых вакансий - {employer['open_vacancies']}')
+                    print(
+                        f"ID - {employer['id']}. Название - {employer['name']}. Открытых вакансий - {employer['open_vacancies']}"
+                    )
                     employers.append(
                         {
-                            "employer_id": employer['id'],
-                            "employer_name": employer['name'],
+                            "employer_id": employer["id"],
+                            "employer_name": employer["name"],
                             "employer_url": employer.get("alternate_url"),
-                            'open_vacancies': employer['open_vacancies']
+                            "open_vacancies": employer["open_vacancies"],
                         }
                     )
         return employers

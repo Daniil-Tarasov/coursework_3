@@ -3,7 +3,7 @@ from configparser import ConfigParser
 
 
 current_dir = os.path.dirname(os.path.abspath(__file__))
-path = os.path.join(current_dir, f"../config/database.ini")
+path = os.path.join(current_dir, "../config/database.ini")
 
 
 def config(
@@ -20,7 +20,5 @@ def config(
         for param in params:
             db[param[0]] = param[1]
     else:
-        raise Exception(
-            "Section {0} is not found in the {1} file.".format(section, filename)
-        )
+        raise Exception("Section {0} is not found in the {1} file.".format(section, filename))
     return db
