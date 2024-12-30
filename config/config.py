@@ -1,8 +1,13 @@
+import os
 from configparser import ConfigParser
 
 
+current_dir = os.path.dirname(os.path.abspath(__file__))
+path = os.path.join(current_dir, f"../config/database.ini")
+
+
 def config(
-    filename="/Users/danya/my_prj/coursework_3/config/database.ini",
+    filename=path,
     section="postgresql",
 ):
     # create a parser

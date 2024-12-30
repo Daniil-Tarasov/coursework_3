@@ -5,6 +5,7 @@ class Vacancies:
 
     def __init__(
         self,
+        employer_id: int | str,
         vacancy_id: int | str,
         name: str,
         url: str,
@@ -14,6 +15,7 @@ class Vacancies:
     ):
         """Конструктор класса"""
 
+        self.__employer_id = employer_id
         self.__vacancy_id = vacancy_id
         self.__name = name
         self.__url = url
@@ -21,7 +23,8 @@ class Vacancies:
         self.__responsibility = responsibility
         self.__requirements = requirements
         dict_vacancy = {
-            "ID": self.__vacancy_id,
+            "employer_id": self.__employer_id,
+            "id": self.__vacancy_id,
             "name": self.__name,
             "url": self.__url,
             "salary": self.__salary,
@@ -35,13 +38,15 @@ class Vacancies:
         """Получение вакансий из списка"""
 
         for vacancy in vacancies_list:
+            employer_id = vacancy['employer']['id']
             vacancy_id = vacancy.get('id')
-            url = vacancy.get("url") if vacancy.get("url") else vacancy.get("alternate_url")
+            url = vacancy.get("alternate_url", "Не указана")
             salary = vacancy.get("salary")
             responsibility = vacancy["snippet"].get("responsibility", "Обязанности не указаны")
             requirements = vacancy["snippet"].get("requirements", "Требования не указаны")
 
             cls(
+                employer_id=employer_id,
                 vacancy_id=vacancy_id,
                 name=vacancy.get("name", "Не указано"),
                 url=url,
@@ -57,6 +62,10 @@ class Vacancies:
 
         if salary is None or salary == "Зарплата не указана":
             return None
+        elif salary.get("from") is None:
+            return salary.get("to")
+        elif salary .get("to") is None:
+            return salary.get("from")
         else:
             salary = (salary.get("from", 0) + salary.get("to", 0)) // 2
             return salary

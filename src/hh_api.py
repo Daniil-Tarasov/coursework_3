@@ -44,7 +44,7 @@ class HHApi(BaseApi):
                         {
                             "employer_id": employer['id'],
                             "employer_name": employer['name'],
-                            "employer_url": employer.get("url"),
+                            "employer_url": employer.get("alternate_url"),
                             'open_vacancies': employer['open_vacancies']
                         }
                     )
@@ -65,10 +65,10 @@ class HHApi(BaseApi):
         return vacancies
 
 
-if __name__ == "__main__":
-    hh = HHApi()
-    print(hh.load_employers("Яндекс"))
-    print(hh.load_vacancies_by_id("1740"))
+# if __name__ == "__main__":
+#     hh = HHApi()
+#     print(hh.load_employers("Яндекс"))
+#     print(hh.load_vacancies_by_id("1740"))
 # 1740 - Яндекс
 # 78638 - Т-банк
 # 40565 - Google
